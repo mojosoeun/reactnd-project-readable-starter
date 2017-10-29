@@ -11,20 +11,28 @@ import {
     FETCH_POST
 } from '../actions'
 
-function category(state = {}, action) {
+const initialState = {
+    list : []
+}
+
+function category(state = initialState, action) {
     switch (action.type) {
         case FETCH_CATEGORY:
             return {
                 ...state,
-                fetched: true,
-                categories: action.categories
+                list: action.categories
             }
         default:
             return state
     }
 }
-function post(state = {}, action){
+function post(state = initialState, action){
     switch (action.type) {
+        case FETCH_POST:
+            return {
+                ...state,
+                list: action.posts
+            }
         case DELETE_POST:
             return {...state}
         case UPDATE_POST:

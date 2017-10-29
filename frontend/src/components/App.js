@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Category from './Category'
-import { fetchCategory } from '../actions';
+import PostList from './PostList'
+import { fetchCategory, fetchPost } from '../actions';
 import { connect } from 'react-redux';
 
 class App extends Component {
 
     componentDidMount() {
         this.props.fetchCategory();
+        this.props.fetchPost();
     }
   
     render() {
-        const { categories } = this.props;
-
-        console.log(categories);
-
+        const { categories, posts } = this.props;
         return (
           <div className='App'>
-              <Category categories={categories}/>
-
-              {/* <Navigation categories={this.state.categories}/> */}
-              {/* <Route path='/:category?' render={(props) => (
-                  <PostList {...props}/>
-              )}/>
+            <Category categories={categories}/>
+            {
+                <Route path='/:category?' render={(props) => (
+                    <PostList {...props} posts={posts} />
+                )}/>
+            }
+            {
+            /*
               <Route path='/add' render={() => (
                   <Form />
               )}/>
@@ -36,13 +37,15 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      categories: state.categories
+      categories: state.category.list,
+      posts: state.post.list
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchCategory: () => { return dispatch(fetchCategory());}
+        fetchCategory: () => { return dispatch(fetchCategory());},
+        fetchPost: () => { return dispatch(fetchPost());}
     }
 };
 

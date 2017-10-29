@@ -1,4 +1,4 @@
-import { fetchCategories } from '../util/api'
+import * as API from '../util/api'
 export const DELETE_POST = 'DELETE_POST'
 export const VOTE_POST = 'VOTE_POST'
 export const UPDATE_POST = 'UPDATE_POST'
@@ -11,13 +11,13 @@ export const FETCH_CATEGORY = 'FETCH_CATEGORY'
 
 export function fetchCategory() {
     return (dispatch) => {
-        fetchCategories().then((categories) => {
+        API.fetchCategories().then((categories) => {
             dispatch(getCategories(categories))
         });
     }
 }
 
-export function getCategories(categories) {
+function getCategories(categories) {
     return {
         type: FETCH_CATEGORY,
         categories
@@ -25,10 +25,21 @@ export function getCategories(categories) {
 }
 
 export function fetchPost() {
-    return {
-        type: FETCH_POST
+    return (dispatch) => {
+        API.fetchPosts().then((posts) => {
+            dispatch(getPosts(posts))
+        });
     }
 }
+
+function getPosts(posts) {
+    return {
+        type: FETCH_POST,
+        posts
+    }
+}
+
+
 
 function createPostSuccess(data) {
     return {
