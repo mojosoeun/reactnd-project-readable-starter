@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "form-serialize": "^0.7.2",
+    "immutable": "^3.8.2",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-bulma-components": "^0.1.8",

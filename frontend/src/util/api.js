@@ -63,15 +63,35 @@ export const fetchPosts = () => {
     }).then((res) => res.json())
 }
 
+/*
+{
+   "id":"6ni6ok3ym7mf1p33lnez",
+   "timestamp":1468479767190,
+   "title":"Learn Redux in 10 minutes!",
+   "body":"Just kidding. It takes more than 10 minutes to learn technology.",
+   "author":"thingone",
+   "category":"redux",
+   "voteScore":-5,
+   "deleted":false
+}
+*/
+
+export const getPostDetail = (id) => {
+    return fetch(`${URL}/posts/${id}`, {
+        headers,
+        method: 'GET'
+    }).then((res) => res.json())
+}
+
 export const fetchCategoryPosts = (category) => {
-    fetch(`${URL}/${category}/posts`, {
+    return fetch(`${URL}/${category}/posts`, {
         headers,
         method: 'GET'
     }).then((res) => res.json())
 }
 
 export const addPost = (body) => {
-    fetch(`${URL}/posts`, {
+    return fetch(`${URL}/posts`, {
         method: 'POST',
         headers: {
             ...headers,
@@ -81,29 +101,28 @@ export const addPost = (body) => {
     }).then(res => res.json())
 }
 
-export const getPostDetail = (id) => {
-    fetch(`${URL}/posts/${id}`, {
-        headers,
-        method: 'GET'
-    }).then((res) => res.json())
-}
 
-export const votePost = (id) => {
-    fetch(`${URL}/posts/${id}`, {
-        headers,
-        method: 'POST'
+
+export const votePost = (id, option) => {
+    return fetch(`${URL}/posts/${id}`, {
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({option})
     }).then((res) => res.json())
 }
 
 export const updatePost = (id) => {
-    fetch(`${URL}/posts/${id}`, {
+    return fetch(`${URL}/posts/${id}`, {
         headers,
         method: 'PUT'
     }).then((res) => res.json())
 }
 
 export const deletePost = (id) => {
-    fetch(`${URL}/posts/${id}`, {
+    return fetch(`${URL}/posts/${id}`, {
         headers,
         method: 'DELETE'
     }).then((res) => res.json())
@@ -111,42 +130,42 @@ export const deletePost = (id) => {
 
 //comment
 export const getPostComment = (id) => {
-    fetch(`${URL}/posts/${id}/comments`, {
+    return fetch(`${URL}/posts/${id}/comments`, {
         headers,
         method: 'GET'
     }).then((res) => res.json())
 }
 
 export const addComment = (id) => {
-    fetch(`${URL}/comments`, {
+    return fetch(`${URL}/comments`, {
         headers,
         method: 'POST'
     }).then((res) => res.json())
 }
 
 export const getComment = (id) => {
-    fetch(`${URL}/comments/${id}`, {
+    return fetch(`${URL}/comments/${id}`, {
         headers,
         method: 'GET'
     }).then((res) => res.json())
 }
 
 export const voteComment = (id) => {
-    fetch(`${URL}/comments/${id}`, {
+    return fetch(`${URL}/comments/${id}`, {
         headers,
         method: 'POST'
     }).then((res) => res.json())
 }
 
 export const updateComment = (id) => {
-    fetch(`${URL}/comments/${id}`, {
+    return fetch(`${URL}/comments/${id}`, {
         headers,
         method: 'PUT'
     }).then((res) => res.json())
 }
 
 export const deleteComment = (id) => {
-    fetch(`${URL}/comments/${id}`, {
+    return fetch(`${URL}/comments/${id}`, {
         headers,
         method: 'DELETE'
     }).then((res) => res.json())

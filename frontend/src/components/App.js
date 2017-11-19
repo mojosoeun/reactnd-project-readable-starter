@@ -2,53 +2,20 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Category from './Category'
 import PostList from './PostList'
-import { fetchCategory, fetchPost } from '../actions';
-import { connect } from 'react-redux';
+import PostForm from './PostForm'
+import PostDetail from './PostDetail'
 
 class App extends Component {
-
-    componentDidMount() {
-        this.props.fetchCategory();
-        this.props.fetchPost();
-    }
-  
     render() {
-        const { categories, posts } = this.props;
         return (
-          <div className='App'>
-            <Category categories={categories}/>
-            {
-                <Route path='/:category?' render={(props) => (
-                    <PostList {...props} posts={posts} />
-                )}/>
-            }
-            {
-            /*
-              <Route path='/add' render={() => (
-                  <Form />
-              )}/>
-              <Route path='/posts/:id' render={(props) => (
-                  <PostDetail {...props}/>
-              )}/> */}
-          </div>
+            <div className='App'>
+                <Category/>
+                <Route exact path='/:category?' component={PostList}/>
+                <Route exact path="/add/post" component={PostForm} />
+                <Route exact path="/:category/:id" component={PostDetail} />
+            </div>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-      categories: state.category.list,
-      posts: state.post.list
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchCategory: () => { return dispatch(fetchCategory());},
-        fetchPost: () => { return dispatch(fetchPost());}
-    }
-};
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
-  
+export default App;

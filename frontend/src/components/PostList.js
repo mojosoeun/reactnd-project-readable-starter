@@ -1,43 +1,73 @@
 import React, { Component } from 'react';
-import { Card, Content, Icon } from 'reactbulma'
+import { Tabs, Section } from 'reactbulma'
+import _ from 'lodash';
+import PostSummary from './PostSummary'
+import { postAction } from '../actions';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router'
 
 class PostList extends Component {
+
+    componentDidMount() {
+        this.handleClick = this.handleClick.bind(this);
+        this.props.fetchPost();
+    }
+
+    state = {
+        order: 'voteScore'
+    }
+
+    handleClick(e) {
+        const { name } = e.target
+        this.setState({ order: name })
+    }
+
+
     render() {
         const { posts } = this.props;
         const category = this.props.match.params.category;
-        let filtersPost;
+        let filteredPosts;
         if (category) {
-            filtersPost = posts.filter((post) => {
+            filteredPosts = posts.filter((post) => {
                 return post.category === category
             })
         } else {
-            filtersPost = posts            
+            filteredPosts = posts
         }
-         return (
-            <article>
+
+        filteredPosts = _.sortBy(filteredPosts, [this.state.order])
+
+        return (
+            <Section medium>
+                <Tabs>
+                    <ul>
+                        <li className={this.state.order == 'voteScore'? 'is-active': ''}><a href="#" name="voteScore"  onClick={this.handleClick}>VoteScore</a></li>
+                        <li className={this.state.order == 'timeStamp'? 'is-active': ''}><a href="#" name="timeStamp" onClick={this.handleClick}>TimeStamp</a></li>
+                    </ul>
+                </Tabs>
                 {
-                    filtersPost.map((post) => {
+                    filteredPosts.map((post) => {
                         return (
-                            <Card key={post.id}>
-                                <Card.Header>
-                                    <Card.Header.Title>
-                                        <Icon><i className="fa fa-caret-up"/></Icon> / <Icon><i className="fa fa-caret-down"/></Icon> 
-                                        <a href="#">{post.title} - {post.author}</a>
-                                    </Card.Header.Title>
-                                </Card.Header>
-                                <Card.Content>
-                                    <Content>
-                                        {post.body}
-                                    </Content>
-                                </Card.Content>
-                            </Card>
+                            <PostSummary key={post.id} post={post} category={category} />
                         )
                     })
                 }
-            </article>
-            
+            </Section>
+
         )
     }
 }
 
-export default PostList;
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts.post.get('list')
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchPost: () => { return dispatch(postAction.fetchPost());}
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostList);
