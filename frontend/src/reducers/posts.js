@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
-import { Map, List } from 'immutable';
+import Immutable from 'immutable'
+
 import {
     DELETE_POST,
     DELETE_COMMENT,
@@ -15,34 +16,21 @@ import {
 } from '../actions/postAction'
 
 
-const initialState = Map({
+const initialState = Immutable.fromJS({
     list: [],
-    detail: Map({})
+    detail: {},
+    comments: []
 })
 
 function post(state = initialState, action){
-    const list = state.get('list');
     switch (action.type) {
         case FETCH_POST:
-            return state.set('list', action.posts)
+            return Immutable.fromJS(state).set('list', action.posts).toJS();
         case FETCH_POST_DETAIL:
-            const detail = state.get('detail');
-            return state.set('detail', action.posts)
+            return Immutable.fromJS(state).set('detail', action.post).toJS();
         case VOTE_POST:
-            // const list = state.list.map((list) => {
-            //     if (list.id === action.post.id) {
-            //         console.log("dddddd");
-            //         const tmp  = Object.assign(list, action.post)
-            //         return tmp;
-            //     }
-            //     return list
-            // })
-
-            // console.log(list)
-            return {
-                ...state,
-                list: list,
-            };
+            const index = Immutable.fromJS(state).get('list').findIndex(item => item.id !== action.post.id)
+            return Immutable.fromJS(state).setIn(['list', index, 'voteScore'], action.post.voteScore).toJS();
         case DELETE_POST:
             return {...state}
         case UPDATE_POST:
@@ -55,10 +43,7 @@ function post(state = initialState, action){
 function comment(state = {}, action) {
     switch (action.type) {
         case FETCH_COMMENT:
-            return {
-                ...state,
-                comment: action.comments
-            }
+            return Immutable.fromJS(state).set('comments', action.comments).toJS();
         case VOTE_COMMENT:
             return {...state}
         case DELETE_COMMENT:

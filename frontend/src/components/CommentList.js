@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 
 
 class CommentList extends Component{
+
     componentDidMount(){
         const { id } = this.props;
         this.props.fetchComments(id)
@@ -43,7 +44,7 @@ class CommentList extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        comments: state.comment.list || []
+        comments: state.posts.post.comments
     }
 }
 
@@ -54,3 +55,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentList);
+
+// export default CommentList

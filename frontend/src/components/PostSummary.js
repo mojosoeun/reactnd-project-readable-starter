@@ -3,6 +3,8 @@ import { postAction } from '../actions';
 import { Box, Media, Content, Icon } from 'reactbulma'
 import { connect } from 'react-redux';
 import Timestamp from 'react-timestamp';
+import { Link } from 'react-router-dom'
+
 
 
 class PostSummary extends Component {
@@ -36,7 +38,7 @@ class PostSummary extends Component {
                     <Media.Content>
                         <Content>
                             <span>
-                                <a href={`/${category}/${post.id}`} post={post}><strong>{post.title}</strong></a> <small>@{post.author}</small> <small><Timestamp time={post.timestamp} format='full'/></small>
+                                <Link to={`/${category}/${post.id}`}><strong>{post.title}</strong></Link> <small>@{post.author}</small> <small><Timestamp time={post.timestamp} format='full'/></small>
                             </span>
                             &nbsp;
                             <Icon small><i className="fa fa-pencil"/></Icon>
@@ -52,7 +54,7 @@ class PostSummary extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        detail: state.posts.post.get('detail')
+        detail: state.posts.post.detail
     }
 };
 
@@ -61,6 +63,13 @@ const mapDispatchToProps = (dispatch) => {
         votePost: (id, option) => { return dispatch(postAction.votePost(id, option))},
         deletePost: (id) => { return dispatch(postAction.deletePost(id))}
     }
+};
+
+PostSummary.propTypes = {
+};
+
+PostSummary.defaultProps = {
+  category: 'all'
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostSummary);

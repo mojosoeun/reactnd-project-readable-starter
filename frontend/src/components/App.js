@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Category from './Category'
 import PostList from './PostList'
 import PostForm from './PostForm'
@@ -10,9 +10,12 @@ class App extends Component {
         return (
             <div className='App'>
                 <Category/>
+                <Switch>
                 <Route exact path='/:category?' component={PostList}/>
-                <Route exact path="/add/post" component={PostForm} />
+                <Route path="/add/post" component={PostForm} />
                 <Route exact path="/:category/:id" component={PostDetail} />
+                </Switch>
+
             </div>
         );
     }

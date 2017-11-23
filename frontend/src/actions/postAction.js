@@ -35,7 +35,6 @@ export function fetchPost() {
 
 
 export function votePost (id, option) {
-    console.log(id, option);
     return (dispatch) => {
         API.votePost(id, option).then((post) => {
             dispatch(doVotePost(post))

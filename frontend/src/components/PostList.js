@@ -35,7 +35,7 @@ class PostList extends Component {
             filteredPosts = posts
         }
 
-        filteredPosts = _.sortBy(filteredPosts, [this.state.order])
+        // filteredPosts = _.sortBy(filteredPosts, [this.state.order])
 
         return (
             <Section medium>
@@ -48,7 +48,7 @@ class PostList extends Component {
                 {
                     filteredPosts.map((post) => {
                         return (
-                            <PostSummary key={post.id} post={post} category={category} />
+                            <PostSummary post={post} category={category} />
                         )
                     })
                 }
@@ -60,7 +60,7 @@ class PostList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        posts: state.posts.post.get('list')
+        posts: state.posts.post.list
     }
 };
 
@@ -68,6 +68,13 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchPost: () => { return dispatch(postAction.fetchPost());}
     }
+};
+
+PostList.propTypes = {
+};
+
+PostList.defaultProps = {
+  posts: []
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostList);

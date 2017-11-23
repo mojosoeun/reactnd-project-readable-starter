@@ -14,12 +14,11 @@ class PostDetail extends Component{
 
     componentDidMount() {
         const id = this.props.match.params.id;
-        // this.props.fetchPostDetail(id)
+        this.props.fetchPostDetail(id)
     }
 
     render() {
-        const { post } = this.props
-
+        const { post } = this.props;
         const id = this.props.match.params.id;
 
         return (
@@ -30,8 +29,8 @@ class PostDetail extends Component{
                     <Container fluid>
                         {post.body}
                     </Container>
+                    <CommentList id={id}/>
                 </Container>
-                <CommentList id={id}/>
             </Section>
         )
     }
@@ -39,7 +38,7 @@ class PostDetail extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        post: state.posts.post.detail || {}
+        post: state.posts.post.detail
     }
 };
 
@@ -49,5 +48,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
-export default PostDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
