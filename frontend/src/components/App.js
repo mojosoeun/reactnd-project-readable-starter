@@ -12,8 +12,9 @@ class App extends Component {
                 <Category/>
                 <Switch>
                 <Route exact path='/:category?' component={PostList}/>
-                <Route path="/add/post" component={PostForm} />
+                <Route exact path="/edit/post" component={PostForm} />
                 <Route exact path="/:category/:id" component={PostDetail} />
+                <Route exact path="/:category/:id/edit" component={PostForm} />
                 </Switch>
 
             </div>

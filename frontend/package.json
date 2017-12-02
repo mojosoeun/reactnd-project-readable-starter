@@ -5,16 +5,20 @@
   "dependencies": {
     "form-serialize": "^0.7.2",
     "immutable": "^3.8.2",
+    "moment": "^2.19.3",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
+    "react-autocomplete": "^1.7.2",
     "react-bulma-components": "^0.1.8",
     "react-dom": "^16.0.0",
+    "react-moment": "^0.6.8",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",
     "reactbulma": "^1.1.0",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "shortid": "^2.2.8"
   },
   "scripts": {
     "start": "react-scripts start",

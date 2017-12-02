@@ -114,10 +114,11 @@ export const votePost = (id, option) => {
     }).then((res) => res.json())
 }
 
-export const updatePost = (id) => {
+export const updatePost = (id, body) => {
     return fetch(`${URL}/posts/${id}`, {
         headers,
-        method: 'PUT'
+        method: 'PUT',
+        body: JSON.stringify(body)
     }).then((res) => res.json())
 }
 
@@ -136,10 +137,14 @@ export const getPostComment = (id) => {
     }).then((res) => res.json())
 }
 
-export const addComment = (id) => {
+export const addComment = (body) => {
     return fetch(`${URL}/comments`, {
-        headers,
-        method: 'POST'
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
     }).then((res) => res.json())
 }
 
@@ -150,10 +155,14 @@ export const getComment = (id) => {
     }).then((res) => res.json())
 }
 
-export const voteComment = (id) => {
+export const voteComment = (id, option) => {
     return fetch(`${URL}/comments/${id}`, {
-        headers,
-        method: 'POST'
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({option})
     }).then((res) => res.json())
 }
 

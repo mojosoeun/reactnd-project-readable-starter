@@ -9,7 +9,7 @@ import {
     VOTE_COMMENT,
     VOTE_POST,
     ADD_POST,
-    FETCH_CATEGORY,
+    ADD_COMMENT,
     FETCH_POST,
     FETCH_POST_DETAIL,
     FETCH_COMMENT
@@ -18,8 +18,10 @@ import {
 
 const initialState = Immutable.fromJS({
     list: [],
-    detail: {},
-    comments: []
+    detail: {
+        post: {},
+        comments: [],
+    }
 })
 
 function post(state = initialState, action){
@@ -27,12 +29,19 @@ function post(state = initialState, action){
         case FETCH_POST:
             return Immutable.fromJS(state).set('list', action.posts).toJS();
         case FETCH_POST_DETAIL:
-            return Immutable.fromJS(state).set('detail', action.post).toJS();
+            return Immutable.fromJS(state).setIn(['detail', 'post'], action.post).toJS();
         case VOTE_POST:
-            const index = Immutable.fromJS(state).get('list').findIndex(item => item.id !== action.post.id)
+            const index = Immutable.fromJS(state).get('list').findIndex(item => {
+                return item.get('id') === action.post.id
+            })
             return Immutable.fromJS(state).setIn(['list', index, 'voteScore'], action.post.voteScore).toJS();
-        case DELETE_POST:
+        case ADD_POST:
             return {...state}
+        case DELETE_POST:
+            const idx = Immutable.fromJS(state).get('list').findIndex(item => {
+                return item.get('id') === action.deletedPost.id
+            })
+            return Immutable.fromJS(state).set('list',  Immutable.fromJS(state).get('list').remove(idx)).toJS();
         case UPDATE_POST:
             return {...state}
         default:
@@ -42,12 +51,20 @@ function post(state = initialState, action){
 
 function comment(state = {}, action) {
     switch (action.type) {
+        case ADD_COMMENT:
+            return Immutable.fromJS(state).setIn(['detail', 'comments'],  Immutable.fromJS(state).get(['detail', 'comments']).push(action.comment)).toJS();
         case FETCH_COMMENT:
-            return Immutable.fromJS(state).set('comments', action.comments).toJS();
+            return Immutable.fromJS(state).setIn(['detail', 'comments'], action.comments).toJS();
         case VOTE_COMMENT:
-            return {...state}
+            const index = Immutable.fromJS(state).getIn(['detail', 'comments']).findIndex(item => {
+                return item.get('id') === action.comment.id
+            })
+            return Immutable.fromJS(state).setIn(['detail', 'comments', index, 'voteScore'], action.comment.voteScore).toJS();
         case DELETE_COMMENT:
-            return state;
+            const idx = Immutable.fromJS(state).getIn(['detail', 'comments']).findIndex(item => {
+                return item.get('id') === action.deletedComment.id
+            })
+            return Immutable.fromJS(state).setIn(['detail', 'comments'],  Immutable.fromJS(state).get(['detail', 'comments']).remove(idx)).toJS();
         default :
             return state
     }

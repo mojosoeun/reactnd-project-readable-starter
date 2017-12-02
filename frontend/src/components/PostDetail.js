@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import { postAction } from '../actions'
-import { Section, Container, Title, SubTitle } from 'reactbulma'
+import { Section, Container, Title, SubTitle, Icon } from 'reactbulma'
 import CommentList from './CommentList'
-import Timestamp from 'react-timestamp';
+import Moment from 'react-moment';
 import { connect } from 'react-redux';
 
 
 class PostDetail extends Component{
+
     constructor(props){
         super(props)
-
+        this.handleDeletePost = this.handleDeletePost.bind(this);
+        this.handleVote = this.handleVote.bind(this);
     }
 
     componentDidMount() {
@@ -17,19 +19,39 @@ class PostDetail extends Component{
         this.props.fetchPostDetail(id)
     }
 
-    render() {
-        const { post } = this.props;
-        const id = this.props.match.params.id;
+    handleDeletePost(e) {
+        e.preventDefault();
+        const id = e.currentTarget.id;
+        this.props.deletePost(id)
 
+        window.location.href = '/'
+    }
+
+    handleVote(e) {
+        const { id, name } = e.currentTarget
+        this.props.votePost(id, name)
+    }
+
+    render() {
+        const { detail } = this.props;
+        const { post } = detail;
         return (
             <Section medium>
                 <Container fluid>
                     <Title>{post.title}</Title>
-                    <SubTitle><Timestamp time={post.timestamp} format='full'/> <strong>@{post.author}</strong></SubTitle>
+                    <SubTitle>{post.voteScore} <Moment date={post.timestamp} /> <strong>@{post.author}</strong></SubTitle>
+                    <a name="upVote" id={post.id} onClick={ this.handleVote }><Icon><i className="fa fa-caret-up"/></Icon></a>
+                    { post.voteScore}
+                    <a name="downVote" id={post.id} onClick={ this.handleVote }><Icon> <i className="fa fa-caret-down"/> </Icon></a>
+                    <Icon><i className="fa fa-comment-o" aria-hidden="true"></i></Icon>
+                    <Icon small><i className="fa fa-pencil"/></Icon>
+                    &nbsp;
+                    <a id={post.id} onClick={ this.handleDeletePost }><Icon small><i className="fa fa-trash"/></Icon></a>
                     <Container fluid>
                         {post.body}
                     </Container>
-                    <CommentList id={id}/>
+                    <hr/>
+                    <CommentList id={detail.id}/>
                 </Container>
             </Section>
         )
@@ -38,14 +60,25 @@ class PostDetail extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        post: state.posts.post.detail
+        detail: state.posts.post.detail
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchPostDetail: (id) => { return dispatch(postAction.fetchPostDetail(id))}
+        fetchPostDetail: (id) => { return dispatch(postAction.fetchPostDetail(id))},
+        deletePost: (id) => { return dispatch(postAction.deletePost(id)) },
+        votePost: (id, option) => { return dispatch(postAction.votePost(id, option))},
     }
 };
 
+PostDetail.propTypes = {
+
+};
+
+PostDetail.defaultProps = {
+    detail: {
+        post: {}
+    }
+};
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);

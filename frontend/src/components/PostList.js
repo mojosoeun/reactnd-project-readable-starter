@@ -4,7 +4,8 @@ import _ from 'lodash';
 import PostSummary from './PostSummary'
 import { postAction } from '../actions';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router'
+import shortid from 'shortid';
+
 
 class PostList extends Component {
 
@@ -35,7 +36,7 @@ class PostList extends Component {
             filteredPosts = posts
         }
 
-        // filteredPosts = _.sortBy(filteredPosts, [this.state.order])
+        filteredPosts = _.orderBy(filteredPosts, [this.state.order], ['desc'])
 
         return (
             <Section medium>
@@ -48,7 +49,7 @@ class PostList extends Component {
                 {
                     filteredPosts.map((post) => {
                         return (
-                            <PostSummary post={post} category={category} />
+                            <PostSummary key={shortid.generate()} post={post} category={category} />
                         )
                     })
                 }

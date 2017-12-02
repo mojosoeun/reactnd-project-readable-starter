@@ -1,42 +1,81 @@
 import React, { Component } from 'react'
-import { Media, Content, Image, Field, Control, Textarea, Button   } from 'reactbulma'
+import { Media, Content, Field, Control, Textarea, Button, Input, Icon, Title } from 'reactbulma'
 import { postAction } from "../actions";
 import { connect } from 'react-redux'
+import serialize from 'form-serialize';
+import shortid from 'shortid';
+import Timestamp from 'react-timestamp';
+import _ from 'lodash';
+import CommentForm from './CommentForm'
 
 
 class CommentList extends Component{
+
+    constructor(props) {
+        super(props)
+    }
 
     componentDidMount(){
         const { id } = this.props;
         this.props.fetchComments(id)
     }
 
+
+    handleVote = (e) => {
+        const { id, name } = e.currentTarget
+        this.props.voteComment(id, name)
+    }
+
+
+    handleSubmit = (e) => {
+        e.preventDefault()
+        const data = serialize(e.target, { hash: true })
+        this.props.addComment(data)
+        const form = document.getElementById("form");
+        form.reset();
+    }
+
+    handleDeleteComment = (e) => {
+        e.preventDefault();
+        const id  = e.target.id;
+        this.props.deleteComment(id)
+
+    }
+
     render(){
 
-        const { comments } = this.props;
+        const { detail, id } = this.props;
+        const { comments } = detail;
+
+        const filteredComments = _.orderBy(comments, ['voteScore'], ['desc'])
+
         return(
             <div>
+                <Title is='4'>Comments</Title>
                 {
-                    comments.map(() => {
+                    filteredComments.map((comment) =>
                         <Media>
                             <Media.Left>
-                                <Image is='64x64' src="http://bulma.io/images/placeholders/128x128.png"/>
+                                <a name="upVote" id={comment.id} onClick={ this.handleVote }><Icon><i className="fa fa-caret-up"/></Icon></a>
+                                { comment.voteScore}
+                                <a name="downVote" id={comment.id} onClick={ this.handleVote }><Icon> <i className="fa fa-caret-down"/> </Icon></a>
                             </Media.Left>
                             <Media.Content>
                                 <Content>
                                     <p>
-                                        <strong>Barbara Middleton</strong>
+                                        <strong>{comment.author}</strong>
                                         <br/>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.
+                                        {comment.body}
                                         <br/>
-                                        <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>
+                                        <small><a>edit</a> · <a id={comment.id} onClick={ this.handleDeleteComment }>delete</a> · <Timestamp time={comment.timestamp} format='full'/></small>
                                     </p>
                                 </Content>
                             </Media.Content>
                         </Media>
-                    })
-                }
 
+                    )
+                }
+                <CommentForm id={id}/>
             </div>
         )
     }
@@ -44,16 +83,26 @@ class CommentList extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        comments: state.posts.post.comments
+        detail: state.posts.post.detail
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchComments: (id) => { return dispatch(postAction.fetchComments(id))}
+        fetchComments: (id) => { return dispatch(postAction.fetchComments(id))},
+        addComment: (data) => { return dispatch(postAction.addComment(data))},
+        deleteComment: (id) => { return dispatch(postAction.deleteComment(id))},
+        voteComment: (id, option) => { return dispatch(postAction.voteComment(id, option))}
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommentList);
+CommentList.propTypes = {
+};
 
-// export default CommentList
+CommentList.defaultProps = {
+    detail: {
+        comments: []
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommentList);
