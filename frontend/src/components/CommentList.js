@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Media, Content, Field, Control, Textarea, Button, Input, Icon, Title } from 'reactbulma'
 import { postAction } from "../actions";
 import { connect } from 'react-redux'
-import serialize from 'form-serialize';
-import shortid from 'shortid';
 import Timestamp from 'react-timestamp';
 import _ from 'lodash';
 import CommentForm from './CommentForm'
@@ -17,6 +15,7 @@ class CommentList extends Component{
 
     componentDidMount(){
         const { id } = this.props;
+        console.log("id", id)
         this.props.fetchComments(id)
     }
 
@@ -26,14 +25,6 @@ class CommentList extends Component{
         this.props.voteComment(id, name)
     }
 
-
-    handleSubmit = (e) => {
-        e.preventDefault()
-        const data = serialize(e.target, { hash: true })
-        this.props.addComment(data)
-        const form = document.getElementById("form");
-        form.reset();
-    }
 
     handleDeleteComment = (e) => {
         e.preventDefault();
@@ -83,7 +74,7 @@ class CommentList extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        detail: state.posts.post.detail
+        detail: state.posts.comment.detail
     }
 }
 

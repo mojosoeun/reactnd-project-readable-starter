@@ -3,7 +3,7 @@ import { postAction } from '../actions'
 import { Section, Container, Title, SubTitle, Icon } from 'reactbulma'
 import CommentList from './CommentList'
 import Moment from 'react-moment';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
 
 class PostDetail extends Component{
@@ -35,23 +35,34 @@ class PostDetail extends Component{
     render() {
         const { detail } = this.props;
         const { post } = detail;
+        const id = this.props.match.params.id;
+
         return (
             <Section medium>
                 <Container fluid>
-                    <Title>{post.title}</Title>
-                    <SubTitle>{post.voteScore} <Moment date={post.timestamp} /> <strong>@{post.author}</strong></SubTitle>
-                    <a name="upVote" id={post.id} onClick={ this.handleVote }><Icon><i className="fa fa-caret-up"/></Icon></a>
-                    { post.voteScore}
-                    <a name="downVote" id={post.id} onClick={ this.handleVote }><Icon> <i className="fa fa-caret-down"/> </Icon></a>
-                    <Icon><i className="fa fa-comment-o" aria-hidden="true"></i></Icon>
-                    <Icon small><i className="fa fa-pencil"/></Icon>
-                    &nbsp;
-                    <a id={post.id} onClick={ this.handleDeletePost }><Icon small><i className="fa fa-trash"/></Icon></a>
-                    <Container fluid>
+                    <Title>
+                        <a name="upVote" id={post.id} onClick={ this.handleVote }><Icon><i className="fa fa-caret-up"/></Icon></a>
+                        &nbsp;
+                        { post.voteScore}
+                        &nbsp;
+                        <a name="downVote" id={post.id} onClick={ this.handleVote }><Icon> <i className="fa fa-caret-down"/> </Icon></a>
+                        &nbsp;
+                        {post.title}
+                    </Title>
+                    <SubTitle>
+                        <Moment date={post.timestamp} format="YYYY-MM-DD-HH:SS"/> <strong>@{post.author}</strong>
+                        <span> <Icon><i className="fa fa-comment-o" aria-hidden="true"></i></Icon> {post.commentCount} </span>
+                    </SubTitle>
+                    <div>
+                        <a><span> edit</span></a>
+                        <a id={post.id} onClick={ this.handleDeletePost }><span> delete</span></a>
+                    </div>
+                    <hr/>
+                    <Container>
                         {post.body}
                     </Container>
                     <hr/>
-                    <CommentList id={detail.id}/>
+                    <CommentList id={id}/>
                 </Container>
             </Section>
         )

@@ -15,11 +15,6 @@ class PostSummary extends Component {
         this.handleDelete = this.handleDelete.bind(this);
     }
 
-    componentDidMount() {
-        const id = this.props.post.id;
-        this.props.fetchComments(id)
-    }
-
     handleVote(e) {
         const { id, name } = e.currentTarget
         this.props.votePost(id, name)
@@ -31,9 +26,7 @@ class PostSummary extends Component {
     }
 
     render() {
-        const { post, category, detail } = this.props;
-        const { comments } = detail;
-
+        const { post, category } = this.props;
         return (
             <Box key={post.id}>
                 <Media>
@@ -50,12 +43,12 @@ class PostSummary extends Component {
                                 </Link>
                                 <span> <small>@{post.author}</small> </span>
                                 <span> <small><Moment format="YYYY-MM-DD-HH:SS" date={post.timestamp}/></small> </span>
-                                <small><Icon><i className="fa fa-comment-o" aria-hidden="true"></i></Icon> {comments.length}</small>
+                                <small><Icon><i className="fa fa-comment-o" aria-hidden="true"></i></Icon> {post.commentCount}</small>
                             </span>
                             <div>
-                                <Link to={`${category}/${post.id}/edit`}><Icon small><i className="fa fa-pencil"/></Icon></Link>
+                                <Link to={`${category}/${post.id}/edit`}> edit</Link>
                                 &nbsp;
-                                <a id={post.id} onClick={ this.handleDelete }><Icon small><i className="fa fa-trash"/></Icon></a>
+                                <a id={post.id} onClick={ this.handleDelete }> delete</a>
                             </div>
                         </Content>
                     </Media.Content>
@@ -73,7 +66,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         votePost: (id, option) => { return dispatch(postAction.votePost(id, option))},
         deletePost: (id) => { return dispatch(postAction.deletePost(id))},
-        fetchComments: (id) => { return dispatch(postAction.fetchComments(id))},
     }
 };
 
